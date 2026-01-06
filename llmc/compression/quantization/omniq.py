@@ -65,7 +65,12 @@ class OmniQuant(BaseBlockwiseQuantization):
     def add_quant_config(self):
         config = self.quant_config['special']
         self.prefix = self.model.block_name_prefix
-        self.loss_func = LossFunction(method='mse')
+
+        # Configure loss function (support configurable loss method)
+        loss_method = config.get('loss_method', 'mse')
+        loss_kwargs = config.get('loss_kwargs', {})
+        self.loss_func = LossFunction(method=loss_method, **loss_kwargs)
+
         self.deactive_amp = config['deactive_amp']
         self.wd = config['wd']
         self.dtype = torch.float if self.deactive_amp else torch.float16

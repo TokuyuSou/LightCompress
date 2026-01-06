@@ -71,8 +71,12 @@ class TesseraQ(BaseBlockwiseQuantization):
 
     def add_quant_config(self):
         self.prefix = self.model.block_name_prefix
-        self.loss_func = LossFunction(method='l2')
         special_config = self.quant_config.get('special', {})
+
+        # Configure loss function (support configurable loss method)
+        loss_method = special_config.get('loss_method', 'l2')
+        loss_kwargs = special_config.get('loss_kwargs', {})
+        self.loss_func = LossFunction(method=loss_method, **loss_kwargs)
 
         self.deactive_amp = special_config.get('deactive_amp', False)
         self.wd = special_config.get('wd', None)

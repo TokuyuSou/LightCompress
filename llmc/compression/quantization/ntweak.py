@@ -52,8 +52,14 @@ class NormTweaking(BaseBlockwiseQuantization):
 
     def add_quant_config(self):
         self.prefix = self.model.block_name_prefix
-        self.loss_func = LossFunction(method='mse')
-        self.deactive_amp = self.quant_config['special']['deactive_amp']
+        special_config = self.quant_config['special']
+
+        # Configure loss function (support configurable loss method)
+        loss_method = special_config.get('loss_method', 'mse')
+        loss_kwargs = special_config.get('loss_kwargs', {})
+        self.loss_func = LossFunction(method=loss_method, **loss_kwargs)
+
+        self.deactive_amp = special_config['deactive_amp']
 
         if self.deactive_amp:
             self.dtype = torch.float
