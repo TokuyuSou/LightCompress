@@ -313,17 +313,23 @@ Potential extensions:
 1. **This Work**: [Sliced-Wasserstein Distance for LLM Quantization](https://arxiv.org/abs/PLACEHOLDER) (2025)
 2. **LightCompress**: [LLMC: Benchmarking Large Language Model Quantization](https://github.com/ModelTC/LightCompress)
 
-### Sliced-Wasserstein Distance
-
-3. Bonneel, N., et al. "Sliced and Radon Wasserstein barycenters of measures." Journal of Mathematical Imaging and Vision (2015)
-4. Kolouri, S., et al. "Sliced-Wasserstein flows: Nonparametric generative modeling via optimal transport and diffusions." ICML (2019)
-
 ### Quantization Methods
 
-5. **OmniQuant**: Shao, W., et al. "OmniQuant: Omnidirectionally Calibrated Quantization for Large Language Models." arXiv (2023)
-6. **TesseraQ**: [TesseraQ Paper Reference]
-7. **AWQ**: Lin, J., et al. "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration." arXiv (2023)
-8. **GPTQ**: Frantar, E., et al. "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers." ICLR (2023)
+```bibtex
+@article{shao2023omniquant,
+  title={Omniquant: Omnidirectionally calibrated quantization for large language models},
+  author={Shao, Wenqi and Chen, Mengzhao and Zhang, Zhaoyang and Xu, Peng and Zhao, Lirui and Li, Zhiqian and Zhang, Kaipeng and Gao, Peng and Qiao, Yu and Luo, Ping},
+  journal={arXiv preprint arXiv:2308.13137},
+  year={2023}
+}
+
+@article{li2024tesseraq,
+  title={Tesseraq: Ultra low-bit llm post-training quantization with block reconstruction},
+  author={Li, Yuhang and Panda, Priyadarshini},
+  journal={arXiv preprint arXiv:2410.19103},
+  year={2024}
+}
+```
 
 ## License
 
