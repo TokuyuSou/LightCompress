@@ -143,7 +143,9 @@ class OmniQuant(BaseBlockwiseQuantization):
                 ].cuda()
             with torch.no_grad():
                 with torch.cuda.amp.autocast():
-                    out = block(input_data[i], **self.input['kwargs'][i])[0]
+                    out = block(input_data[i], **self.input['kwargs'][i])
+                    if isinstance(out, tuple):
+                        out = out[0]
                     output.append(out)
         return output
 
@@ -206,10 +208,18 @@ class OmniQuant(BaseBlockwiseQuantization):
                         self.smooth_tmp_weight(block)
 
                     if self.position_ids is not None:
+                        position_embeddings = self.input['kwargs'][i].get(
+                            'position_embeddings'
+                        )
+                        if position_embeddings is None:
+                            position_embeddings = self.model.model.rotary_emb(
+                                self.input['data'][i], self.position_ids
+                            )
                         quant_out = block(
                             self.input['data'][i],
                             attention_mask=self.batch_mask,
                             position_ids=self.position_ids,
+                            position_embeddings=position_embeddings,
                         )[0]
                     else:
                         quant_out = block(
@@ -685,10 +695,10 @@ class OmniQuant(BaseBlockwiseQuantization):
         if hasattr(module, 'buf_upbound_factor'):
             args['upbound_factor'] = module.buf_upbound_factor
 
-        if module.dynamic_quant_weight:
+        if getattr(module, 'dynamic_quant_weight', False):
             return wquantizer.fake_quant_weight_dynamic(module.weight, args)
 
-        elif module.dynamic_quant_tmp_weight:
+        elif getattr(module, 'dynamic_quant_tmp_weight', False):
             return wquantizer.fake_quant_weight_dynamic(module.tmp_weight, args)
         else:
             return wquantizer.fake_quant_weight_dynamic(module.weight, args)
